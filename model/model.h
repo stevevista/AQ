@@ -161,8 +161,7 @@ using net_type2 =
 LMODEL_API bool load_zero_weights(zero_net_type& net, const std::string& path);
 LMODEL_API bool load_dark_weights(dark_net_type& net, const std::string& path);
 LMODEL_API bool load_leela_weights(leela_net_type& net, const std::string& path);
-LMODEL_API bool load_ago_policy(alphago::net_type& net, const std::string& path);
-LMODEL_API bool load_ago_value(alphago::vnet_type& net, const std::string& path);
+
 
 template<typename NET>
 inline const tensor& forward(NET& net, const tensor& input, double temperature, const tensor** value_out) {
@@ -190,34 +189,6 @@ inline const tensor& forward(dark_net_type& net, const tensor& input, double tem
 
     *value_out = &net.forward(input);
     return layer<1>(net).get_output();
-}
-
-
-namespace model {
-
-template<typename ITER>
-const tensor& features_to_tensor(
-        resizable_tensor& x,
-        ITER begin, 
-        ITER end) {
-
-    const int batch_size = std::distance(begin, end);
-    const int k = begin->size();
-    x.set_size(batch_size, k, board_size, board_size);
-
-    auto dst = x.host_write_only();
-    for (; begin != end; begin++) {
-
-        for (int c=0; c< k; c++) {
-            for (int i=0; i<board_count; i++) {
-                *(dst++) = (float)(*begin)[c][i];
-            }
-        }
-    }
-
-    return x;
-}
-
 }
 
 
