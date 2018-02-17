@@ -1,5 +1,25 @@
 # AQ
 
+
+## Tiny changes to remove dependecy to tensorflow 
+
+### Build on Linux or Windows
+No tensorflow requirement
+```
+mkdir build
+cd build
+cmake ..
+cmake --build . --config Release 
+```
+### Chganges
+- NN forwarding using modified dlib dnn (https://github.com/davisking/dlib)
+- TF Graph parsing using modified protobuf (https://github.com/google/protobuf)
+- tiny changes on src/neural_net.cpp
+- add a CMakeLists.txt
+
+
+
+
 AQ is a program of Go game with level of top players.  
 [CGOS](http://www.yss-aya.com/cgos/19x19/standings.html) rating: 3952 ([BayesElo](http://www.yss-aya.com/cgos/19x19/bayes.html))  
 
