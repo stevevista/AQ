@@ -1,7 +1,4 @@
-# AQ
-
-
-## Tiny changes to remove dependecy to tensorflow 
+## Tiny changes to remove compiling dependency on tensorflow 
 
 ### Build on Linux or Windows
 No tensorflow requirement
@@ -17,8 +14,7 @@ cmake --build . --config Release
 - tiny changes on src/neural_net.cpp
 - add a CMakeLists.txt
 
-
-
+# AQ
 
 AQ is a program of Go game with level of top players.  
 [CGOS](http://www.yss-aya.com/cgos/19x19/standings.html) rating: 3952 ([BayesElo](http://www.yss-aya.com/cgos/19x19/bayes.html))  
