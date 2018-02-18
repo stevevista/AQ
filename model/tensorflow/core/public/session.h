@@ -8,15 +8,14 @@
 
 namespace tensorflow {
 
-using namespace lightmodel;
 using namespace dlib;
 
 // stubs
 struct Session {
     void Create(GraphDef&);
     const dlib::tensor& run(const dlib::tensor&, double tmp = 1);
-    std::shared_ptr<::lightmodel::alphago::net_type> policy_net;
-    std::shared_ptr<::lightmodel::alphago::vnet_type> value_net;
+    std::shared_ptr<::alphago::net_type> policy_net;
+    std::shared_ptr<::alphago::vnet_type> value_net;
     int device_id;
 };
 

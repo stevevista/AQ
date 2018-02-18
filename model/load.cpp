@@ -229,7 +229,7 @@ static bool test_if_policy_graph(const tensorflow::GraphDef& g) {
     return false;
 }
 
-void load_policy(lightmodel::alphago::net_type& net, const tensorflow::GraphDef& g) {
+void load_policy(alphago::net_type& net, const tensorflow::GraphDef& g) {
     
     std::vector<dlib::param_data> params(22*2+1+2); 
     
@@ -292,7 +292,7 @@ void load_policy(lightmodel::alphago::net_type& net, const tensorflow::GraphDef&
 }
 
 
-void load_value(lightmodel::alphago::vnet_type& net, const tensorflow::GraphDef& g) {
+void load_value(alphago::vnet_type& net, const tensorflow::GraphDef& g) {
     
     std::vector<dlib::param_data> params(20*2); 
     
@@ -370,10 +370,10 @@ void Session::Create(GraphDef& g) {
     
     device_id = graph::tmp_id;
     if (test_if_policy_graph(g)) {
-        policy_net = std::make_shared<::lightmodel::alphago::net_type>();
+        policy_net = std::make_shared<::alphago::net_type>();
         load_policy(*policy_net, g);
     } else {
-        value_net =  std::make_shared<::lightmodel::alphago::vnet_type>();
+        value_net =  std::make_shared<::alphago::vnet_type>();
         load_value(*value_net, g);
     }
 }
