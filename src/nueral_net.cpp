@@ -89,7 +89,7 @@ int cfg_sym_idx = 0;
 	const int nk = feature_cnt+1;
 	resizable_tensor x;
 
-#if 1
+#if 0
 	x.set_size(ft_cnt, nk, BSIZE, BSIZE);
 	auto x_eigen = x.host_write_only();
 

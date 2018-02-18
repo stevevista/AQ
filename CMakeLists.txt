@@ -359,7 +359,10 @@ target_compile_options(AQ PRIVATE ${active_preprocessor_switches})
 
 
 enable_cpp11_for_target(AQ)
-target_compile_options(AQ PUBLIC ${active_compile_opts} "-msse4.2" "-DNDEBUG")
+target_compile_options(AQ PUBLIC ${active_compile_opts} "-DNDEBUG")
+if (NOT MSVC)
+target_compile_options(AQ PUBLIC "-msse4.2")
+endif()
 
 
 
