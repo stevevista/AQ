@@ -394,4 +394,74 @@ const dlib::tensor& Session::run(const dlib::tensor& x, double temp) {
         return value_net->forward(x);
 }
 
+
+void Session::Run(const std::vector<std::pair<std::string, Tensor>>& inputs, 
+                const std::vector<std::string>& outnodes, 
+                const std::vector<std::string>&, 
+                std::vector<Tensor>* outputs) {
+
+    if (inputs.size() == 2 && inputs[1].first == "temp") {
+        // policy
+        assert(policy_net);
+        auto temp = inputs[1].second.x[0];
+        auto& x_shape = inputs[0].second.shape;
+        auto& x_d = inputs[0].second.x;
+        x.set_size(x_shape[0], x_shape[1], x_shape[2], x_shape[3]);
+        std::copy(x_d.begin(), x_d.end(), x.host_write_only());
+
+        if (temp != 1)
+            layer<0>(*policy_net).layer_details().set_temprature(temp);
+
+        auto& out = policy_net->forward(x);
+        auto out_d = out.host();
+        
+        Tensor tout(DT_FLOAT, {(int)out.num_samples(), (int)out.k()});
+        std::copy(out_d, out_d + out.size(), tout.x.begin());
+        
+        outputs->push_back(tout);
+
+    } else {
+        // value
+        assert(value_net);
+        auto& vn_x = inputs[0].second.x;
+        auto& vn_c = inputs[1].second.x;
+        auto& x_shape = inputs[0].second.shape;
+
+        x.set_size(x_shape[0], x_shape[1] + 1, x_shape[2], x_shape[3]);
+        auto dst = x.host_write_only();
+        std::copy(vn_x.begin(), vn_x.end(), dst);
+        std::copy(vn_c.begin(), vn_c.end(), dst+vn_x.size());
+
+        auto& out = value_net->forward(x);
+        auto out_d = out.host();
+
+        Tensor tout(DT_FLOAT, {(int)out.num_samples(), 1});
+        std::copy(out_d, out_d + out.size(), tout.x.begin());
+        
+        outputs->push_back(tout);
+    }
+
+}
+
+Tensor::Tensor(int type, const TensorShape& s) {
+
+    assert(type == DT_FLOAT);
+    if (s.size() == 0) shape = {1,1,1,1};
+    else if (s.size() == 1) shape = {1,s[0],1,1};
+    else if (s.size() == 2) shape = {s[0],s[1],1,1};
+    else if (s.size() == 3) {
+        // n, BVCNT, feature_cnt
+        int n = s[0];
+        int k = s[2];
+        assert(s[1] == 361);
+        shape = {n,k,19,19};
+    }
+    else {
+        assert(false);
+    }
+    x.resize(shape[0]*shape[1]*shape[2]*shape[3]);
+}
+
+
+
 }

@@ -5,13 +5,12 @@ No tensorflow requirement
 ```
 mkdir build
 cd build
-cmake ..
+cmake .. or cmake .. -G "Visual Studio 14 2015 Win64" -T host=x64 (windows)
 cmake --build . --config Release 
 ```
 ### Chganges
 - NN forwarding using modified dlib dnn (https://github.com/davisking/dlib)
 - TF Graph parsing using modified protobuf (https://github.com/google/protobuf)
-- tiny changes on src/neural_net.cpp
 - add a CMakeLists.txt
 
 # AQ
