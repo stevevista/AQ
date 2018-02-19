@@ -20,7 +20,6 @@ include(GNUInstallDirs)
 
 # default to a Release build (except if CMAKE_BUILD_TYPE is set)
 include(model/cmake_utils/release_build_by_default)
-include(model/cmake_utils/use_cpp_11.cmake)
 
 
 set(CPACK_PACKAGE_VERSION_MAJOR "19")
@@ -358,7 +357,7 @@ target_link_libraries(AQ PRIVATE ${dlib_needed_libraries})
 target_compile_options(AQ PRIVATE ${active_preprocessor_switches})
 
 
-enable_cpp11_for_target(AQ)
+target_compile_options(AQ PUBLIC "-std=c++14")
 target_compile_options(AQ PUBLIC ${active_compile_opts} "-DNDEBUG")
 if (NOT MSVC)
 target_compile_options(AQ PUBLIC "-msse4.2")

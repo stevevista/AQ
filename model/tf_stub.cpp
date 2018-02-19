@@ -7,6 +7,8 @@ using namespace std;
 using namespace google;
 using namespace dlib;
 
+#define LOW_CUDA_MEMORY
+
 std::string space(int indent) {
     std::vector<char> s(indent*2+1, ' ');
     s.back() = 0;
@@ -406,18 +408,37 @@ void Session::Run(const std::vector<std::pair<std::string, Tensor>>& inputs,
         auto temp = inputs[1].second.x[0];
         auto& x_shape = inputs[0].second.shape;
         auto& x_d = inputs[0].second.x;
-        x.set_size(x_shape[0], x_shape[1], x_shape[2], x_shape[3]);
-        std::copy(x_d.begin(), x_d.end(), x.host_write_only());
+
+        const int num = x_shape[0];
+        Tensor tout(DT_FLOAT, {num, x_shape[2]*x_shape[3]});
 
         if (temp != 1)
             layer<0>(*policy_net).layer_details().set_temprature(temp);
 
+#ifdef LOW_CUDA_MEMORY
+        auto x_dd = &x_d[0];
+        auto tout_d = &tout.x[0];
+        x.set_size(1, x_shape[1], x_shape[2], x_shape[3]);
+        for (int i=0; i<num; i++) {
+            std::copy(x_dd, x_dd + x.size(), x.host_write_only());
+
+            auto& out = policy_net->forward(x);
+            auto out_d = out.host();
+
+            std::copy(out_d, out_d + out.size(), tout_d);
+
+            x_dd += x.size();
+            tout_d += x_shape[2]*x_shape[3];
+        }
+#else
+        x.set_size(x_shape[0], x_shape[1], x_shape[2], x_shape[3]);
+        std::copy(x_d.begin(), x_d.end(), x.host_write_only());
+
         auto& out = policy_net->forward(x);
         auto out_d = out.host();
         
-        Tensor tout(DT_FLOAT, {(int)out.num_samples(), (int)out.k()});
         std::copy(out_d, out_d + out.size(), tout.x.begin());
-        
+#endif
         outputs->push_back(tout);
 
     } else {
@@ -427,6 +448,31 @@ void Session::Run(const std::vector<std::pair<std::string, Tensor>>& inputs,
         auto& vn_c = inputs[1].second.x;
         auto& x_shape = inputs[0].second.shape;
 
+        const int num = x_shape[0];
+        Tensor tout(DT_FLOAT, {num, 1});
+
+#ifdef LOW_CUDA_MEMORY
+        auto vn_xd = &vn_x[0];
+        auto vn_cd = &vn_c[0];
+        auto tout_d = &tout.x[0];
+        const int x_sample_size = x_shape[1] * x_shape[2] * x_shape[3];
+        x.set_size(1, x_shape[1] + 1, x_shape[2], x_shape[3]);
+
+        for (int i=0; i<num; i++) {
+            auto dst = x.host_write_only();
+            std::copy(vn_xd, vn_xd + x_sample_size, dst);
+            std::copy(vn_cd, vn_cd + 361, dst+x_sample_size);
+
+            auto& out = value_net->forward(x);
+            auto out_d = out.host();
+
+            std::copy(out_d, out_d + out.size(), tout_d);
+
+            vn_xd += x_sample_size;
+            vn_cd += 361;
+            tout_d += 1;
+        }
+#else
         x.set_size(x_shape[0], x_shape[1] + 1, x_shape[2], x_shape[3]);
         auto dst = x.host_write_only();
         std::copy(vn_x.begin(), vn_x.end(), dst);
@@ -435,9 +481,8 @@ void Session::Run(const std::vector<std::pair<std::string, Tensor>>& inputs,
         auto& out = value_net->forward(x);
         auto out_d = out.host();
 
-        Tensor tout(DT_FLOAT, {(int)out.num_samples(), 1});
         std::copy(out_d, out_d + out.size(), tout.x.begin());
-        
+#endif
         outputs->push_back(tout);
     }
 

@@ -1,7 +1,12 @@
 ## Tiny changes to remove compiling dependency on tensorflow 
 
+Building tensorflow is a little bit complicate for me. So I made this.
+
 ### Build on Linux or Windows
-No tensorflow requirement
+- No tensorflow requirement
+- No changes to AQ original code
+- [optional] CUDA 7.0/8.0/9.0 CUDNN 6.0/7.0 
+- [optional] BLAS (OpenBLAS/Intel MKL/..)
 ```
 mkdir build
 cd build

@@ -38,7 +38,7 @@ std::string pb_dir = "";
 #endif
 
 /**
- *  å¼±ã„CASã‚’ç¹°ã‚Šè¿”ã—ã¦åŠ ç®—ã™ã‚‹ doubleç”¨
+ *  ã‚¢CAS‚ğŒJ‚è•Ô‚µ‚Ä‰ÁZ‚·‚é double—p
  *  Repeat weak CAS for floating-type addition.
  */
 template<typename T>
@@ -178,7 +178,7 @@ void Tree::Clear(){
 			}
 		}
 	}
-	fin.close();  //ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã‚‹
+	fin.close();  //ƒtƒ@ƒCƒ‹‚ğ•Â‚¶‚é
 #endif
 
 }
@@ -210,7 +210,7 @@ void Tree::InitBoard(){
 
 
 /**
- *  policy_queã«å±€é¢ã‚’è¿½åŠ ã™ã‚‹
+ *  policy_que‚É‹Ç–Ê‚ğ’Ç‰Á‚·‚é
  *  Add new entry to policy_que.
  */
 void Tree::AddPolicyQue(int node_idx, Board& b){
@@ -228,7 +228,7 @@ void Tree::AddPolicyQue(int node_idx, Board& b){
 
 
 /**
- *  value_queã«å±€é¢ã‚’è¿½åŠ ã™ã‚‹
+ *  value_que‚É‹Ç–Ê‚ğ’Ç‰Á‚·‚é
  *  Add new entry to value_que.
  */
 void Tree::AddValueQue(std::vector<std::pair<int,int>>& upper_list, Board& b){
@@ -269,14 +269,14 @@ void Tree::AddValueQue(std::vector<std::pair<int,int>>& upper_list, Board& b){
 
 
 /**
- *  ãƒãƒ¼ãƒ‰ã‚’æ–°è¦ä½œæˆã™ã‚‹
- *  æ—¢ã«ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ã¨ãã¯ãã®indexã‚’è¿”ã™
+ *  ƒm[ƒh‚ğV‹Kì¬‚·‚é
+ *  Šù‚É“o˜^‚³‚ê‚Ä‚¢‚é‚Æ‚«‚Í‚»‚Ìindex‚ğ•Ô‚·
  *
  *  Create a new Node and returns the index.
  */
 int Tree::CreateNode(Board& b) {
 
-	// å…¥åŠ›ç›¤é¢ã®ãƒãƒƒã‚·ãƒ¥ã‚’æ±‚ã‚ã‚‹. Calculate board hash.
+	// “ü—Í”Õ–Ê‚ÌƒnƒbƒVƒ…‚ğ‹‚ß‚é. Calculate board hash.
 	int64 hash_b = BoardHash(b);
 	int node_idx;
 
@@ -287,14 +287,14 @@ int Tree::CreateNode(Board& b) {
 
 			if(node_hash_list.find(hash_b) != node_hash_list.end()){
 
-				// åˆ¥ã®ã‚¹ãƒ¬ãƒƒãƒ‰ã§ã“ã®å±€é¢ãƒãƒ¼ãƒ‰ã‚’ç”Ÿæˆä¸­
+				// •Ê‚ÌƒXƒŒƒbƒh‚Å‚±‚Ì‹Ç–Êƒm[ƒh‚ğ¶¬’†
 				// Return -1 if another thread is creating this node.
 				if(node[node_hash_list[hash_b]].is_creating) return -1;
 
-				// æ—¢ã«ç™»éŒ²æ¸ˆã®ã¨ãã€ãã®indexã‚’è¿”ã™
+				// Šù‚É“o˜^Ï‚Ì‚Æ‚«A‚»‚Ìindex‚ğ•Ô‚·
 				// Return the index if the key is already registered.
 				else{
-					// ç›¤é¢ãƒãƒƒã‚·ãƒ¥ãŒåŒä¸€ã‹ç¢ºèª
+					// ”Õ–ÊƒnƒbƒVƒ…‚ª“¯ˆê‚©Šm”F
 					// Confirm whether the board hashes are the same.
 					if(node[node_hash_list[hash_b]].hash == hash_b &&
 						node[node_hash_list[hash_b]].move_cnt == b.move_cnt)
@@ -308,7 +308,7 @@ int Tree::CreateNode(Board& b) {
 			node_idx = std::max(0, std::min(node_idx, node_limit - 1));
 			pn = &node[node_idx];
 
-			// åˆ¥ã®ç™»éŒ²ãŒã•ã‚Œã¦ã„ã‚‹orä½œæˆä¸­ã®ã¨ãã€node_idxã‚’å¤‰æ›´
+			// •Ê‚Ì“o˜^‚ª‚³‚ê‚Ä‚¢‚éorì¬’†‚Ì‚Æ‚«Anode_idx‚ğ•ÏX
 			// Update node_idx if another node is registered or been creating.
 			while (pn->child_cnt != 0 || pn->is_creating) {
 				++node_idx;
@@ -415,7 +415,7 @@ int Tree::CreateNode(Board& b) {
 			new_child.move = prob_list[i].second;
 			new_child.prob = prob_list[i].first;
 
-			// å­å±€é¢ã‚’ç™»éŒ². Register the child.
+			// q‹Ç–Ê‚ğ“o˜^. Register the child.
 			pn->children[i] = new_child;
 			pn->child_cnt++;
 		}
@@ -430,7 +430,7 @@ int Tree::CreateNode(Board& b) {
 
 	AddPolicyQue(node_idx, b);
 
-	// ä½œæˆã—ãŸãƒãƒ¼ãƒ‰ã®indexã‚’è¿”ã™
+	// ì¬‚µ‚½ƒm[ƒh‚Ìindex‚ğ•Ô‚·
 	// Return the Node index.
 	return node_idx;
 
@@ -438,13 +438,13 @@ int Tree::CreateNode(Board& b) {
 
 
 /**
- *  ãƒãƒ¼ãƒ‰ã®ç¢ºç‡åˆ†å¸ƒã‚’policy netã«ç½®ãæ›ãˆã‚‹
+ *  ƒm[ƒh‚ÌŠm—¦•ª•z‚ğpolicy net‚É’u‚«Š·‚¦‚é
  *  Update probability of node with that evaluated
  *  by the policy network.
  */
 void Tree::UpdateNodeProb(int node_idx, std::array<double, EBVCNT>& prob_list) {
 
-	// 1. node[node_idx]ã®ç¢ºç‡åˆ†å¸ƒã‚’prob_listã«æ›´æ–°
+	// 1. node[node_idx]‚ÌŠm—¦•ª•z‚ğprob_list‚ÉXV
 	//    Replace probability of node[node_idx] with prob_list.
 	Node* pn = &node[node_idx];
 	for(int i=0;i<BVCNT;++i){
@@ -452,7 +452,7 @@ void Tree::UpdateNodeProb(int node_idx, std::array<double, EBVCNT>& prob_list) {
 		pn->prob[v] = prob_list[v];
 	}
 
-	// 2. (prob,idx)ã®ãƒšã‚¢ã‚’é™é †ã«ã‚½ãƒ¼ãƒˆã—ã€prob_orderã‚’æ›´æ–°
+	// 2. (prob,idx)‚ÌƒyƒA‚ğ~‡‚Éƒ\[ƒg‚µAprob_order‚ğXV
 	//    Update prob_order after sorting.
 	int child_cnt = pn->child_cnt.load();
 	std::vector<std::pair<double, int>> prob_idx_pair;
@@ -466,7 +466,7 @@ void Tree::UpdateNodeProb(int node_idx, std::array<double, EBVCNT>& prob_list) {
 		pn->prob_order[i] = prob_idx_pair[i].second;
 	}
 
-	// 3. LGRã®ç€æ‰‹ã‚’lgr.policyã«ç™»éŒ²
+	// 3. LGR‚Ì’…è‚ğlgr.policy‚É“o˜^
 	//    Register LGR move in lgr.policy.
 	if(lambda != 1.0){
 		std::array<int,4> lgr_seed = {pn->prev_ptn[0], pn->prev_move[0], pn->prev_ptn[1], pn->prev_move[1]};
@@ -483,7 +483,7 @@ void Tree::UpdateNodeProb(int node_idx, std::array<double, EBVCNT>& prob_list) {
 
 
 /**
- *  node[node_idx]ä»¥ä¸‹ã«é€£ãªã‚‹ãƒãƒ¼ãƒ‰ã®indexã‚’åé›†ã™ã‚‹
+ *  node[node_idx]ˆÈ‰º‚É˜A‚È‚éƒm[ƒh‚Ìindex‚ğûW‚·‚é
  *  Collect all indexes of nodes under node[node_idx].
  */
 int Tree::CollectNodeIndex(int node_idx, int depth, std::unordered_set<int>& node_list) {
@@ -508,7 +508,7 @@ int Tree::CollectNodeIndex(int node_idx, int depth, std::unordered_set<int>& nod
 			if(	!(prev_move == PASS && next_move == PASS) &&
 				node_list.find((int)pc->next_idx) == node_list.end())
 			{
-				// æ¬¡ã®ãƒãƒ¼ãƒ‰ãŒå­˜åœ¨ã™ã‚‹ã¨ãã¯å†å¸°å‘¼ã³å‡ºã—.
+				// Ÿ‚Ìƒm[ƒh‚ª‘¶İ‚·‚é‚Æ‚«‚ÍÄ‹AŒÄ‚Ño‚µ.
 				// Call recursively if next node exits.
 				int tmp_depth = CollectNodeIndex((int)pc->next_idx, depth, node_list);
 				if(tmp_depth > max_depth) max_depth = tmp_depth;
@@ -522,21 +522,21 @@ int Tree::CollectNodeIndex(int node_idx, int depth, std::unordered_set<int>& nod
 
 
 /**
- *  ãƒãƒ¼ãƒ‰ä»¥ä¸‹ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’èª¿ã¹ã€ãƒãƒ¼ãƒ‰ä½¿ç”¨ç‡ã‚’æ¸›ã‚‰ã™
+ *  ƒm[ƒhˆÈ‰º‚ÌƒCƒ“ƒfƒbƒNƒX‚ğ’²‚×Aƒm[ƒhg—p—¦‚ğŒ¸‚ç‚·
  *  Delete indexes to reduce node usage rate. (30%-60%)
  */
 void Tree::DeleteNodeIndex(int node_idx){
 
-	// 1. ãƒãƒ¼ãƒ‰ä½¿ç”¨ç‡ãŒ50%æœªæº€ãªã‚‰å‰Šé™¤ã—ãªã„
+	// 1. ƒm[ƒhg—p—¦‚ª50%–¢–‚È‚çíœ‚µ‚È‚¢
 	//    Do not delete nodes if node utilization is less than 50%.
 	if(node_cnt < 0.5 * node_limit) return;
 
-	// 2. node_idxã«ç¹‹ãŒã‚‹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’èª¿ã¹ã‚‹
+	// 2. node_idx‚ÉŒq‚ª‚éƒCƒ“ƒfƒbƒNƒX‚ğ’²‚×‚é
 	//    Find indexes connecting to the root node.
 	std::unordered_set<int> under_root;
 	CollectNodeIndex(node_idx, 0, under_root);
 
-	// 3. ãƒãƒ¼ãƒ‰ä½¿ç”¨ç‡ãŒ20%ä»¥ä¸‹ã«ãªã‚‹ã¾ã§æœ€å¤ã®ãƒãƒ¼ãƒ‰æ‰‹æ•°ã‚’æ›´æ–°ã™ã‚‹
+	// 3. ƒm[ƒhg—p—¦‚ª20%ˆÈ‰º‚É‚È‚é‚Ü‚ÅÅŒÃ‚Ìƒm[ƒhè”‚ğXV‚·‚é
 	//    Update the oldest move count of the nodes until the node
 	//    usage becomes 20% or less.
 	std::unordered_set<int> node_list(under_root);
@@ -561,7 +561,7 @@ void Tree::DeleteNodeIndex(int node_idx){
 		}
 	}
 
-	// 4. node_listã«ãªã„å¤ã„ãƒãƒ¼ãƒ‰ã‚’å‰Šé™¤
+	// 4. node_list‚É‚È‚¢ŒÃ‚¢ƒm[ƒh‚ğíœ
 	//    Delete old node not in node_list.
 	{
 		std::lock_guard<std::mutex> lock(mtx_node);
@@ -578,7 +578,7 @@ void Tree::DeleteNodeIndex(int node_idx){
 		}
 	}
 
-	// 5. policy_queã‹ã‚‰å‰Šé™¤
+	// 5. policy_que‚©‚çíœ
 	//    Remove entries from policy_que.
 	std::deque<PolicyEntry> remain_pque;
 	for(auto i:policy_que){
@@ -589,7 +589,7 @@ void Tree::DeleteNodeIndex(int node_idx){
 	policy_que.swap(remain_pque);
 	policy_que_cnt = (int)policy_que.size();
 
-	// 6. value_queã‹ã‚‰å‰Šé™¤
+	// 6. value_que‚©‚çíœ
 	//    Remove entries from value_que.
 	std::deque<ValueEntry> remain_vque;
 	for(auto i:value_que){
@@ -600,7 +600,7 @@ void Tree::DeleteNodeIndex(int node_idx){
 			for(int j=1, j_max=i.depth-1;j<j_max;++j){
 				if(	node_list.find(i.node_idx[j]) == node_list.end())
 				{
-					// çµŒè·¯ã«å‰Šé™¤ã•ã‚ŒãŸãƒãƒ¼ãƒ‰ãŒå«ã¾ã‚Œã‚‹ã¨ãã¯å‰Šé™¤
+					// Œo˜H‚Éíœ‚³‚ê‚½ƒm[ƒh‚ªŠÜ‚Ü‚ê‚é‚Æ‚«‚Ííœ
 					is_remain = false;
 					break;
 				}
@@ -622,7 +622,7 @@ void Tree::DeleteNodeIndex(int node_idx){
 }
 
 /**
- *  ãƒ«ãƒ¼ãƒˆãƒãƒ¼ãƒ‰ã‚’å…¥åŠ›ç›¤é¢ã®ã‚‚ã®ã«å¤‰æ›´ã™ã‚‹
+ *  ƒ‹[ƒgƒm[ƒh‚ğ“ü—Í”Õ–Ê‚Ì‚à‚Ì‚É•ÏX‚·‚é
  *  Update the root node with the input board.
  */
 int Tree::UpdateRootNode(Board&b){
@@ -639,9 +639,9 @@ int Tree::UpdateRootNode(Board&b){
 
 
 /**
- *  æ¢ç´¢æœ¨ã®ä¸­ã§ã€è¦ªãƒãƒ¼ãƒ‰ â†’ å­ãƒãƒ¼ãƒ‰ã®ç§»å‹•ã‚’1å›è¡Œã†
- *  å­ãƒãƒ¼ãƒ‰ãŒå­˜åœ¨ã—ãªã„ã¨ãã€æ–°è¦ã«ä½œæˆã™ã‚‹ã‹ã‚’åˆ¤æ–­ã™ã‚‹
- *  æœ«ç«¯ã§ã¯ãƒ—ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆãƒ»ValueNetè©•ä¾¡ã‚’è¡Œã„ã€ãã®çµæœã‚’è¿”ã™
+ *  ’Tõ–Ø‚Ì’†‚ÅAeƒm[ƒh ¨ qƒm[ƒh‚ÌˆÚ“®‚ğ1‰ñs‚¤
+ *  qƒm[ƒh‚ª‘¶İ‚µ‚È‚¢‚Æ‚«AV‹K‚Éì¬‚·‚é‚©‚ğ”»’f‚·‚é
+ *  ––’[‚Å‚ÍƒvƒŒƒCƒAƒEƒgEValueNet•]‰¿‚ğs‚¢A‚»‚ÌŒ‹‰Ê‚ğ•Ô‚·
  *
  *  Proceed to a child node from the parent node.
  *  Create new node if there is no corresponding child node.
@@ -656,7 +656,7 @@ double Tree::SearchBranch(Board& b, int node_idx, double& value_result,
 	Child *pc;
 	bool use_rollout = (lambda != 1.0);
 
-	// 1. action valueãŒä¸€ç•ªé«˜ã„æ‰‹ã‚’é¸ã¶
+	// 1. action value‚ªˆê”Ô‚‚¢è‚ğ‘I‚Ô
 	//    Choose the move with the highest action value.
 	int max_idx = 0;
 	double max_avalue = -128;
@@ -671,7 +671,7 @@ double Tree::SearchBranch(Board& b, int node_idx, double& value_result,
 
 	for (int i=0, n=(int)pn->child_cnt;i<n;++i) {
 
-		// a. ç¢ºç‡ãŒé«˜ã„é †ã«èª¿ã¹ã‚‹
+		// a. Šm—¦‚ª‚‚¢‡‚É’²‚×‚é
 		//    Search in descending order of probability.
 		int child_idx = pn->prob_order[i];
 		pc = &pn->children[child_idx];
@@ -681,7 +681,7 @@ double Tree::SearchBranch(Board& b, int node_idx, double& value_result,
 		rollout_win = (double)pc->rollout_win;
 		value_win = (double)pc->value_win;
 
-		// b. ã“ã®æ‰‹ã®å‹ç‡ã‚’è¨ˆç®—ã™ã‚‹
+		// b. ‚±‚Ìè‚ÌŸ—¦‚ğŒvZ‚·‚é
 		//    Calculate winning rate of this move.
 		if(rollout_cnt == 0) 	rollout_rate = pn_rollout_rate;
 		else					rollout_rate = rollout_win / rollout_cnt;
@@ -690,12 +690,12 @@ double Tree::SearchBranch(Board& b, int node_idx, double& value_result,
 
 		rate = (1-lambda) * rollout_rate + lambda * value_rate;
 
-		// c. action valueã‚’æ±‚ã‚ã‚‹
+		// c. action value‚ğ‹‚ß‚é
 		//    Calculate action value.
 		game_cnt = use_rollout? (double)pc->rollout_cnt : (double)pc->value_cnt;
 		action_value = rate + cp * pc->prob * pn_root_game / (1 + game_cnt);
 
-		// d. max_idxã‚’æ›´æ–°. Update max_idx.
+		// d. max_idx‚ğXV. Update max_idx.
 		if (action_value > max_avalue) {
 			max_avalue = action_value;
 			max_idx = child_idx;
@@ -703,7 +703,7 @@ double Tree::SearchBranch(Board& b, int node_idx, double& value_result,
 
 	}
 
-	// 2. action valueãŒæœ€å¤§ã®æ‰‹ã‚’æ¢ç´¢ã™ã‚‹
+	// 2. action value‚ªÅ‘å‚Ìè‚ğ’Tõ‚·‚é
 	//    Search for the move with the maximum action value.
 	pc = &pn->children[max_idx];
 	int next_idx = pc->next_idx;
@@ -720,14 +720,14 @@ double Tree::SearchBranch(Board& b, int node_idx, double& value_result,
 	serch_route.push_back(std::make_pair(node_idx, max_idx));
 	int next_move = pc->move;
 	int prev_move = b.prev_move[b.her];
-	// å‹æ•—çµæœã®(0,Â±1)ã‚’(-0.5,+0.5)ã«è£œæ­£ã™ã‚‹ãƒã‚¤ã‚¢ã‚¹
+	// Ÿ”sŒ‹‰Ê‚Ì(0,}1)‚ğ(-0.5,+0.5)‚É•â³‚·‚éƒoƒCƒAƒX
 	// Bias of winning rate that corrects result of (0, +/-1) to (-0.5, +0.5).
 	double win_bias = (b.my == 0)? -0.5 : 0.5;
 
-	// 3. LGRã‚’æ›´æ–°. Update LGR of policy.
+	// 3. LGR‚ğXV. Update LGR of policy.
 	if(use_rollout && !pn->is_visit && pn->is_policy_eval)
 	{
-		// ç¾åœ¨ã®root nodeã«ãªã£ã¦ã‹ã‚‰æœ€åˆã«æ¢ç´¢ã™ã‚‹ã¨ãã«æ›´æ–°
+		// Œ»İ‚Ìroot node‚É‚È‚Á‚Ä‚©‚çÅ‰‚É’Tõ‚·‚é‚Æ‚«‚ÉXV
 		// Update when searching first after becoming the current root node.
 		pn->is_visit = true;
 		int max_prob_idx = pn->prob_order[0];
@@ -742,7 +742,7 @@ double Tree::SearchBranch(Board& b, int node_idx, double& value_result,
 		}
 	}
 
-	// 4. ãƒ—ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã‚’ã™ã‚‹ã‹ã‚’åˆ¤æ–­
+	// 4. ƒvƒŒƒCƒAƒEƒg‚ğ‚·‚é‚©‚ğ”»’f
 	//    Check if rollout is necessary.
 	bool need_rollout = false;
 	int pc_game_cnt = use_rollout? (int)pc->rollout_cnt : (int)pc->value_cnt;
@@ -754,36 +754,36 @@ double Tree::SearchBranch(Board& b, int node_idx, double& value_result,
 		need_rollout = true;
 	}
 
-	// 5. ãƒãƒ¼ãƒ‰å±•é–‹ã™ã‚‹ã‹ã‚’åˆ¤æ–­
+	// 5. ƒm[ƒh“WŠJ‚·‚é‚©‚ğ”»’f
 	//    Check whether the next node can be expanded.
 	bool expand_node = false;
 	if(!is_next && !need_rollout)
 	{
-		// ç½®æ›è¡¨ãŒ85%åŸ‹ã¾ã£ã¦ã„ã‚‹ã¨ãã¯æ–°è¦ä½œæˆã—ãªã„
+		// ’uŠ·•\‚ª85%–„‚Ü‚Á‚Ä‚¢‚é‚Æ‚«‚ÍV‹Kì¬‚µ‚È‚¢
 		// New node is not chreated when the transposition table is filled by 85%.
 		if(node_cnt < 0.85 * node_limit /*&& pc->is_value_eval*/) expand_node = true;
 		else need_rollout = true;
 	}
 
-	// 6. å±€é¢ã‚’é€²ã‚ã‚‹. Play next_mvoe.
+	// 6. ‹Ç–Ê‚ği‚ß‚é. Play next_mvoe.
 	b.PlayLegal(next_move);
 
-	// 7. ãƒãƒ¼ãƒ‰ã‚’å±•é–‹ã™ã‚‹
+	// 7. ƒm[ƒh‚ğ“WŠJ‚·‚é
 	//    Expand the next node.
 	if(expand_node){
 		int next_idx_exp = CreateNode(b);
-		// 
+		// ‚½‚Ü‚É’uŠ·•\‚ª‰ó‚ê‚Ä•s³‚Èindex‚ğ•Ô‚·‚Ì‚Å‚»‚Ì‘Îô
 		if(next_idx_exp < 0 || next_idx_exp >= node_limit) need_rollout = true;
 		else{
 			npn = &node[next_idx_exp];
 			pc->next_idx = next_idx_exp;
 			pc->next_hash = (int64)npn->hash;
 
-			// pc -> npnã¸å¯¾å±€æƒ…å ±ã‚’åæ˜ . Reflect game information.
+			// pc -> npn‚Ö‘Î‹Çî•ñ‚ğ”½‰f. Reflect game information.
 			//npn->total_game_cnt += use_rollout? (int)pc->rollout_cnt : (int)pc->value_cnt;
 			npn->rollout_cnt += (int)pc->rollout_cnt;
 			npn->value_cnt += (int)pc->value_cnt;
-			// æ‰‹ç•ªãŒå¤‰ã‚ã‚‹ã®ã§è©•ä¾¡å€¤ã‚’åè»¢
+			// è”Ô‚ª•Ï‚í‚é‚Ì‚Å•]‰¿’l‚ğ”½“]
 			// Reverse evaluation value since turn changes.
 			FetchAdd(&npn->rollout_win, -(double)pc->rollout_win);
 			FetchAdd(&npn->value_win, -(double)pc->value_win);
@@ -793,7 +793,7 @@ double Tree::SearchBranch(Board& b, int node_idx, double& value_result,
 		}
 	}
 
-	// 8. virtual lossã‚’åŠ ãˆã‚‹. Add virtual loss.
+	// 8. virtual loss‚ğ‰Á‚¦‚é. Add virtual loss.
 	if(use_rollout){
 		FetchAdd(&pc->rollout_win, -(double)vloss_cnt);
 		pc->rollout_cnt += vloss_cnt;
@@ -805,12 +805,12 @@ double Tree::SearchBranch(Board& b, int node_idx, double& value_result,
 		pn->total_game_cnt += vloss_cnt;
 	}
 
-	// 9. æœ«ç«¯ã§ã‚ã‚Œã°ãƒ—ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã‚’è¡Œã„ã€æ¬¡ã®ãƒãƒ¼ãƒ‰ãŒå­˜åœ¨ã™ã‚Œã°æ¢ç´¢ã‚’é€²ã‚ã‚‹
+	// 9. ––’[‚Å‚ ‚ê‚ÎƒvƒŒƒCƒAƒEƒg‚ğs‚¢AŸ‚Ìƒm[ƒh‚ª‘¶İ‚·‚ê‚Î’Tõ‚ği‚ß‚é
 	//    Roll out if it is the leaf node, otherwise proceed to the next node.
 	double rollout_result = 0.0;
 	if (need_rollout)
 	{
-		// a-1. å±€é¢ãŒæœªè©•ä¾¡ã§ã‚ã‚Œã°ã‚­ãƒ¥ãƒ¼ã«è¿½åŠ ã™ã‚‹
+		// a-1. ‹Ç–Ê‚ª–¢•]‰¿‚Å‚ ‚ê‚ÎƒLƒ…[‚É’Ç‰Á‚·‚é
 		//      Add into the queue if the board is not evaluated.
 		value_result = 0;
 		if(pc->is_value_eval){
@@ -821,20 +821,20 @@ double Tree::SearchBranch(Board& b, int node_idx, double& value_result,
 		}
 
 		if(use_rollout){
-			// b. ãƒ—ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã—ã€çµæœã‚’[-1.0, 1.0]ã«è¦æ ¼åŒ–
+			// b. ƒvƒŒƒCƒAƒEƒg‚µAŒ‹‰Ê‚ğ[-1.0, 1.0]‚É‹KŠi‰»
 			//    Roll out and normalize the result to [-1.0, 1.0].
 			rollout_result = -2.0 * ((double)PlayoutLGR(b, lgr_, komi) + win_bias);
 		}
 	}
 	else{
-		// a-2. æ¬¡ã®nodeã«é€²ã‚€
-		//      æ‰‹ç•ªãŒå¤‰ã‚ã£ã¦ã„ã‚‹ã®ã§ã€çµæœã‚‚ç¬¦å·åè»¢ã•ã›ã‚‹
+		// a-2. Ÿ‚Ìnode‚Éi‚Ş
+		//      è”Ô‚ª•Ï‚í‚Á‚Ä‚¢‚é‚Ì‚ÅAŒ‹‰Ê‚à•„†”½“]‚³‚¹‚é
 		//      Proceed to the next node and reverse the results.
 		rollout_result = -SearchBranch(b, (int)pc->next_idx, value_result, serch_route, lgr_, stat_);
 		value_result *= -1.0;
 	}
 
-	// 10. virtual lossã‚’è§£æ¶ˆ&å‹ç‡æ›´æ–°
+	// 10. virtual loss‚ğ‰ğÁ&Ÿ—¦XV
 	//     Subtract virtual loss and update results.
 	if(use_rollout){
 		FetchAdd(&pc->rollout_win, (double)vloss_cnt + rollout_result);
@@ -928,14 +928,14 @@ std::string CoordinateString(int v){
 }
 
 /**
- *  æ¢ç´¢ã‚’ç¹°ã‚Šè¿”ã—æœ€å–„æ‰‹ã‚’æ±‚ã‚ã‚‹
+ *  ’Tõ‚ğŒJ‚è•Ô‚µÅ‘Pè‚ğ‹‚ß‚é
  *  Repeat searching for the best move.
  */
 int Tree::SearchTree(	Board& b, double time_limit, double& win_rate,
 						bool is_errout, bool is_ponder)
 {
 
-	// 1. root nodeã‚’æ›´æ–°. Update root node.
+	// 1. root node‚ğXV. Update root node.
 	if(b.move_cnt == 0) Tree::InitBoard();
 	int node_idx = CreateNode(b);
 	bool is_root_changed = (root_node_idx != node_idx);
@@ -944,7 +944,7 @@ int Tree::SearchTree(	Board& b, double time_limit, double& win_rate,
 	eval_policy_cnt = 0;
 	eval_value_cnt = 0;
 
-	// 2. åˆæ³•æ‰‹ãŒãªã„ã¨ãã¯ãƒ‘ã‚¹ã‚’è¿”ã™
+	// 2. ‡–@è‚ª‚È‚¢‚Æ‚«‚ÍƒpƒX‚ğ•Ô‚·
 	//    Return pass if there is no legal move.
 	Node *pn = &node[root_node_idx];
 	if (pn->child_cnt <= 1){
@@ -958,7 +958,7 @@ int Tree::SearchTree(	Board& b, double time_limit, double& win_rate,
 		return PASS;
 	}
 
-	// 3. å®šçŸ³ãŒã‚ã‚‹ã¨ãã€ãã®æ‰‹ã‚’è¿”ã™
+	// 3. ’èÎ‚ª‚ ‚é‚Æ‚«A‚»‚Ìè‚ğ•Ô‚·
 	//    Return joseki if exists.
 	if(!is_ponder && move_cnt < 32 && book.find(BoardHash(b)) != book.end()){
 		std::vector<int> moves;
@@ -978,13 +978,13 @@ int Tree::SearchTree(	Board& b, double time_limit, double& win_rate,
 		}
 	}
 
-	// 4. lambdaã‚’é€²è¡Œåº¦ã«åˆã‚ã›ã¦èª¿æ•´ (0.8 -> 0.4)
+	// 4. lambda‚ğis“x‚É‡‚í‚¹‚Ä’²® (0.8 -> 0.4)
 	//    Adjust lambda to progress.
 	lambda = 0.8 - 0.4 * std::min(1.0, std::max(0.0, ((double)b.move_cnt - 160) / (360 - 160)));
 	cp = 0.1 + 2.9 * std::min(1.0, std::max(0.0, ((double)b.move_cnt - 0) / (16 - 0)));
 	bool use_rollout = (lambda != 1.0);
 
-	// 5. root nodeãŒæœªè©•ä¾¡ã®ã¨ãã€ç¢ºç‡åˆ†å¸ƒã‚’è©•ä¾¡ã™ã‚‹
+	// 5. root node‚ª–¢•]‰¿‚Ì‚Æ‚«AŠm—¦•ª•z‚ğ•]‰¿‚·‚é
 	//    	If the root node is not evaluated, evaluate the probability.
 	if(!pn->is_policy_eval){
 		std::vector<std::array<double,EBVCNT>> prob_list;
@@ -997,29 +997,29 @@ int Tree::SearchTree(	Board& b, double time_limit, double& win_rate,
 		UpdateNodeProb(root_node_idx, prob_list[0]);
 	}
 
-	// 6. å­ãƒãƒ¼ãƒ‰ã‚’æ¢ç´¢å›æ•°ãŒå¤šã„é †ã«ã‚½ãƒ¼ãƒˆ
+	// 6. qƒm[ƒh‚ğ’Tõ‰ñ”‚ª‘½‚¢‡‚Éƒ\[ƒg
 	//    Sort child nodes in descending order of search count.
 	std::vector<Child*> rc;
 	SortChildren(pn, rc);
 
-	// 7. æ¢ç´¢å›æ•°ãŒæœ€å¤§ã®å­ãƒãƒ¼ãƒ‰ã®å‹ç‡ã‚’æ±‚ã‚ã‚‹
+	// 7. ’Tõ‰ñ”‚ªÅ‘å‚Ìqƒm[ƒh‚ÌŸ—¦‚ğ‹‚ß‚é
 	//    Calculate the winning percentage of pc0.
 	win_rate = BranchRate(rc[0]);
 	int rc0_game_cnt = use_rollout? (int)rc[0]->rollout_cnt : (int)rc[0]->value_cnt;
 	int rc1_game_cnt = use_rollout? (int)rc[1]->rollout_cnt : (int)rc[1]->value_cnt;
 
-	/// 8-1. æŒã¡æ™‚é–“ãŒæ®‹ã‚Šå°‘ãªã„ã¨ãã¯æ¢ç´¢ã—ãªã„
+	// 8-1. ‚¿ŠÔ‚ªc‚è­‚È‚¢‚Æ‚«‚Í’Tõ‚µ‚È‚¢
 	//      Return best move without searching when time is running out.
 	if(!is_ponder &&
 		time_limit == 0.0 &&
 		byoyomi == 0.0 &&
 		left_time < cfg_emer_time){
 
-		// a. æ—¥æœ¬ãƒ«ãƒ¼ãƒ«ã®ã¨ãã€ã‚‚ã—ç›´å‰ã®æ‰‹ãŒpassãªã‚‰pass
+		// a. “ú–{ƒ‹[ƒ‹‚Ì‚Æ‚«A‚à‚µ’¼‘O‚Ìè‚ªpass‚È‚çpass
 		//    Return pass if the previous move is pass in Japanese rule.
 		if(japanese_rule && b.prev_move[b.her] == PASS) return PASS;
 
-		// b. æœ€å¤šè©¦è¡Œã®å­ãƒãƒ¼ãƒ‰ãŒ1000æœªæº€ã®ã¨ãã€policy netã®æœ€ä¸Šä½ã‚’è¿”ã™
+		// b. Å‘½s‚Ìqƒm[ƒh‚ª1000–¢–‚Ì‚Æ‚«Apolicy net‚ÌÅãˆÊ‚ğ•Ô‚·
 		//    Return the move with highest probability if total game count is less than 1000.
 		if(rc0_game_cnt < 1000){
 			int v = pn->children[pn->prob_order[0]].move;
@@ -1032,10 +1032,10 @@ int Tree::SearchTree(	Board& b, double time_limit, double& win_rate,
 		}
 
 	}
-	// 8-2. ä¸¦åˆ—æ¢ç´¢ã‚’è¡Œã†. Parallel search.
+	// 8-2. •À—ñ’Tõ‚ğs‚¤. Parallel search.
 	else
 	{
-		// a. rootä»¥ä¸‹ã«å­˜åœ¨ã™ã‚‹ãƒãƒ¼ãƒ‰ã‚’èª¿ã¹ã€ãã‚Œä»¥å¤–ã‚’æ¶ˆå»
+		// a. rootˆÈ‰º‚É‘¶İ‚·‚éƒm[ƒh‚ğ’²‚×A‚»‚êˆÈŠO‚ğÁ‹
 		if (is_root_changed) DeleteNodeIndex(root_node_idx);
 
 		bool stand_out =
@@ -1066,11 +1066,11 @@ int Tree::SearchTree(	Board& b, double time_limit, double& win_rate,
 			double thinking_time = time_limit;
 			bool can_extend = false;
 
-			// b. æœ€å¤§æ€è€ƒæ™‚é–“ã‚’è¨ˆç®—ã™ã‚‹
+			// b. Å‘åvlŠÔ‚ğŒvZ‚·‚é
 			if(!is_ponder){
 				if(time_limit == 0.0){
 					if(main_time == 0.0){
-						// æŒã¡æ™‚é–“ãŒç§’èª­ã¿ã ã‘ã®ã¨ã
+						// ‚¿ŠÔ‚ª•b“Ç‚İ‚¾‚¯‚Ì‚Æ‚«
 						// Set byoyomi if the main time is 0.
 #ifdef OnlineMatch
 						thinking_time = std::max(byoyomi - 3, 0.1);
@@ -1090,15 +1090,15 @@ int Tree::SearchTree(	Board& b, double time_limit, double& win_rate,
 							can_extend = (extension_cnt > 0);
 						}
 						else{
-							// ã‚µãƒ‰ãƒ³ãƒ‡ã‚¹ã®ã¨ãã€æ®‹ã‚Šæ™‚é–“ã‹ã‚‰ç®—å‡º
-							// ç§’èª­ã¿ãŒã‚ã‚‹ã¨ãã€ç§’èª­ã¿ã®1-1.5å€
+							// ƒTƒhƒ“ƒfƒX‚Ì‚Æ‚«Ac‚èŠÔ‚©‚çZo
+							// •b“Ç‚İ‚ª‚ ‚é‚Æ‚«A•b“Ç‚İ‚Ì1-1.5”{
 							// Calculate from remaining time if sudden death,
 							// otherwise set that of 1-1.5 times of byoyomi.
 							thinking_time = std::max(
 										left_time/(55.0 + std::max(50.0 - b.move_cnt, 0.0)),
 										byoyomi * (1.5 - (double)std::max(50.0 - b.move_cnt, 0.0) / 100)
 									);
-							// ã‚µãƒ‰ãƒ³ãƒ‡ã‚¹ã§ã¯ã€æ®‹ã‚Šæ™‚é–“ãŒ15ï¼…ä»¥ä¸‹ã®ã¨ãã¯æ€è€ƒå»¶é•·ã—ãªã„
+							// ƒTƒhƒ“ƒfƒX‚Å‚ÍAc‚èŠÔ‚ª15“ˆÈ‰º‚Ì‚Æ‚«‚Ívl‰„’·‚µ‚È‚¢
 							// Do not extend thinking time if the remaining time is 10% or less.
 							can_extend = (left_time > main_time * 0.15) || (byoyomi >= 10);
 						}
@@ -1106,18 +1106,18 @@ int Tree::SearchTree(	Board& b, double time_limit, double& win_rate,
 
 				}
 
-				// ã©ã¡ã‚‰ã‹ã®å‹ç‡ãŒ90%è¶…ã®ã¨ãã€1ç§’ã ã‘æ€è€ƒã™ã‚‹
+				// ‚Ç‚¿‚ç‚©‚ÌŸ—¦‚ª90%’´‚Ì‚Æ‚«A1•b‚¾‚¯vl‚·‚é
 				// Think only for 1sec when either winning percentage is over 90%.
 				if(win_rate < 0.1 || win_rate > 0.9) thinking_time = std::min(thinking_time, 1.0);
 				can_extend &= (thinking_time > 1 && b.move_cnt > 3);
 			}
 
-			// c. thread_cntå€‹ã®ã‚¹ãƒ¬ãƒƒãƒ‰ã§ä¸¦åˆ—æ¢ç´¢ã‚’è¡Œã†
+			// c. thread_cntŒÂ‚ÌƒXƒŒƒbƒh‚Å•À—ñ’Tõ‚ğs‚¤
 			//    Search in parallel with thread_cnt threads.
 			ParallelSearch(thinking_time, b, is_ponder);
 			SortChildren(pn, rc);
 
-			// d. 1ä½ã®æ‰‹ã¨2ä½ã®æ‰‹ã®è©¦è¡Œå›æ•°ãŒ1.5å€ä»¥å†…ã®ã¨ãã€æ€è€ƒæ™‚é–“ã‚’å»¶é•·ã™ã‚‹
+			// d. 1ˆÊ‚Ìè‚Æ2ˆÊ‚Ìè‚Ìs‰ñ”‚ª1.5”{ˆÈ“à‚Ì‚Æ‚«AvlŠÔ‚ğ‰„’·‚·‚é
 			//    Extend thinking time when the trial number of first move
 			//    and second move is close.
 			if(!stop_think && can_extend){
@@ -1144,10 +1144,10 @@ int Tree::SearchTree(	Board& b, double time_limit, double& win_rate,
 
 			stop_think = false;
 
-			// e. ç›¤é¢ã®å æœ‰ç‡ã‚’æ›´æ–°. Update statistics of the board.
+			// e. ”Õ–Ê‚Ìè—L—¦‚ğXV. Update statistics of the board.
 			if(pn->total_game_cnt - prev_game_cnt > 5000) stat -= prev_stat;
 
-			// f. æ¢ç´¢æƒ…å ±ã‚’å‡ºåŠ›ã™ã‚‹
+			// f. ’Tõî•ñ‚ğo—Í‚·‚é
 			//    Output search information.
 			auto t2 = std::chrono::system_clock::now();
 			auto elapsed_time = (double)std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()/1000;
@@ -1165,7 +1165,7 @@ int Tree::SearchTree(	Board& b, double time_limit, double& win_rate,
 		}
 	}
 
-	// 8. ç›´å‰ã®æ‰‹ãŒãƒ‘ã‚¹ã®ã¨ãè‡ªåˆ†ã‚‚ãƒ‘ã‚¹ã‚’ã™ã‚‹ã‹èª¿ã¹ã‚‹
+	// 8. ’¼‘O‚Ìè‚ªƒpƒX‚Ì‚Æ‚«©•ª‚àƒpƒX‚ğ‚·‚é‚©’²‚×‚é
 	//    Check whether pass should be returned. (Japanese rule)
 	if(japanese_rule && b.prev_move[b.her] == PASS){
 		Board b_cpy;
@@ -1186,14 +1186,14 @@ int Tree::SearchTree(	Board& b, double time_limit, double& win_rate,
 			}
 		}
 
-		// ï¿½ï¿½ï¿½ï¿½7ï¿½ï¿½ï¿½Èï¿½Ì‚Æ‚ï¿½ï¿½Aï¿½pï¿½Xï¿½ï¿½Ô‚ï¿½
+		// Ÿ—¦7Š„ˆÈã‚Ì‚Æ‚«AƒpƒX‚ğ•Ô‚·
 		// Return pass if the winning rate > 65%.
 		if((double)win_cnt / playout_cnt > 0.65){
 			win_rate = (double)win_cnt / playout_cnt;
 			return PASS;
 		}
 	}
-	// 9. ï¿½Å‘Pï¿½è‚ªï¿½pï¿½Xï¿½ÅŒï¿½ï¿½Ê‚ï¿½ï¿½å·ï¿½È‚ï¿½ï¿½Æ‚ï¿½ï¿½Aï¿½pï¿½Xï¿½ï¿½2ï¿½Ô–Ú‚ÌŒï¿½ï¿½ï¿½
+	// 9. Å‘Pè‚ªƒpƒX‚ÅŒ‹‰Ê‚ª‘å·‚È‚¢‚Æ‚«AƒpƒX‚ğ2”Ô–Ú‚ÌŒó•â‚É
 	//    When the best move is pass and the result is not much different,
 	//    return the second move. (Chinese rule)
 	else if (!japanese_rule && rc[0]->move == PASS) {
@@ -1203,10 +1203,10 @@ int Tree::SearchTree(	Board& b, double time_limit, double& win_rate,
 		if (win_sign > 0) std::swap(rc[0], rc[1]);
 	}
 
-	// 10. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½V. Update winning_rate.
+	// 10. Ÿ—¦‚ğXV. Update winning_rate.
 	win_rate = BranchRate(rc[0]);
 
-	// 11. ï¿½ï¿½Ê‚Ìqï¿½mï¿½[ï¿½hï¿½Ì’Tï¿½ï¿½ï¿½ï¿½ï¿½Ê‚ï¿½ï¿½oï¿½Í‚ï¿½ï¿½ï¿½.
+	// 11. ãˆÊ‚Ìqƒm[ƒh‚Ì’TõŒ‹‰Ê‚ğo—Í‚·‚é.
 	//     Output information of upper child nodes.
 	if (is_errout) {
 		PrintLog(log_file, "total games=%d, evaluated policy=%d(%d), value=%d(%d)\n",
@@ -1222,7 +1222,7 @@ int Tree::SearchTree(	Board& b, double time_limit, double& win_rate,
 }
 
 /**
- *  ï¿½Xï¿½ï¿½ï¿½bï¿½hï¿½Å’Tï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½ï¿½Ô‚ï¿½
+ *  ƒXƒŒƒbƒh‚Å’Tõ‚ğŒJ‚è•Ô‚·
  *  Repeat searching with a single thread.
  */
 void Tree::ThreadSearchBranch(Board& b, double time_limit, int cpu_idx, bool is_ponder) {
@@ -1269,13 +1269,13 @@ void Tree::ThreadSearchBranch(Board& b, double time_limit, int cpu_idx, bool is_
 		}
 		++loop_cnt;
 
-		// 64ï¿½ñ‚²‚Æ‚É’Tï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½Ø‚é‚©ï¿½ï¿½ï¿½`ï¿½Fï¿½bï¿½N
+		// 64‰ñ‚²‚Æ‚É’Tõ‚ğ‘Å‚¿Ø‚é‚©‚ğƒ`ƒFƒbƒN
 		// Check whether to terminate the search every 64 times.
 		if (loop_cnt % 64 == 0) {
 			auto t2 = std::chrono::system_clock::now();
 			auto elapsed_time = (double)std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() / 1000;
 
-			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½oï¿½ß‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Astop_thinkï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½Tï¿½ï¿½ï¿½Iï¿½ï¿½
+			// §ŒÀŠÔ‚ªŒo‰ß‚µ‚½‚©Astop_thinkƒtƒ‰ƒO‚ª—§‚Á‚½‚Æ‚«’TõI—¹
 			// Terminate the search when the time limit has elapsed or stop_think flag is set.
 			if(elapsed_time > time_limit || stop_think){
 				stat_th -= initial_stat;
@@ -1320,7 +1320,7 @@ void Tree::ThreadSearchBranch(Board& b, double time_limit, int cpu_idx, bool is_
 }
 
 /**
- *  ã‚¹ãƒ¬ãƒƒãƒ‰ã§policy/valueã®è©•ä¾¡ã‚’è¡Œã†
+ *  ƒXƒŒƒbƒh‚Åpolicy/value‚Ì•]‰¿‚ğs‚¤
  *  Evaluate policy and value of boards in a single thread.
  */
 void Tree::ThreadEvaluate(double time_limit, int gpu_idx, bool is_ponder) {
@@ -1341,7 +1341,7 @@ void Tree::ThreadEvaluate(double time_limit, int gpu_idx, bool is_ponder) {
 
 	for (;;){
 
-		// 1. value_queã‚’å‡¦ç†. Process value_que.
+		// 1. value_que‚ğˆ—. Process value_que.
 		if(value_que_cnt > 0){
 			int eval_cnt = 0;
 			{
@@ -1349,11 +1349,11 @@ void Tree::ThreadEvaluate(double time_limit, int gpu_idx, bool is_ponder) {
 				if(value_que_cnt > 0){
 					eval_cnt = std::min(max_eval_value, (int)value_que_cnt);
 
-					// a. vque_thã«ã‚³ãƒ”ãƒ¼. Copy partially to vque_th.
+					// a. vque_th‚ÉƒRƒs[. Copy partially to vque_th.
 					vque_th.resize(eval_cnt);
 					copy(value_que.begin(), value_que.begin() + eval_cnt, vque_th.begin());
 
-					// b. value_queã‚’å…ˆé ­ã‹ã‚‰å‰Šé™¤.
+					// b. value_que‚ğæ“ª‚©‚çíœ.
 					//    Remove value_que from the beginning.
 					for(int i=0;i<eval_cnt;++i) value_que.pop_front();
 					value_que_cnt -= eval_cnt;
@@ -1373,7 +1373,7 @@ void Tree::ThreadEvaluate(double time_limit, int gpu_idx, bool is_ponder) {
 					std::vector<float> eval_list;
 					ValueNet(sess_value[gpu_idx], ft_list, eval_list, sym_idx);
 
-					// d. ä¸Šæµãƒãƒ¼ãƒ‰ã®value_winã‚’å…¨ã¦æ›´æ–°ã™ã‚‹
+					// d. ã—¬ƒm[ƒh‚Ìvalue_win‚ğ‘S‚ÄXV‚·‚é
 					//    Update all value information of the upstream nodes.
 					for(int i=0;i<eval_cnt;++i){
 
@@ -1407,7 +1407,7 @@ void Tree::ThreadEvaluate(double time_limit, int gpu_idx, bool is_ponder) {
 			}
 		}
 
-		// 2. policy_queã‚’å‡¦ç†. Process policy_que.
+		// 2. policy_que‚ğˆ—. Process policy_que.
 #ifdef CPU_ONLY
 		if(policy_que_cnt > 0 && mt_double(mt_32) < 0.25){
 #else
@@ -1420,11 +1420,11 @@ void Tree::ThreadEvaluate(double time_limit, int gpu_idx, bool is_ponder) {
 					eval_cnt = std::min(max_eval_policy, (int)policy_que_cnt);
 					eval_policy_cnt += eval_cnt;
 
-					// a. pque_thï¿½ÉƒRï¿½sï¿½[. Copy partially to pque_th.
+					// a. pque_th‚ÉƒRƒs[. Copy partially to pque_th.
 					pque_th.resize(eval_cnt);
 					copy(policy_que.begin(), policy_que.begin()+eval_cnt, pque_th.begin());
 
-					// b. policy_queï¿½ï¿½æ“ªï¿½ï¿½ï¿½ï¿½íœ.
+					// b. policy_que‚ğæ“ª‚©‚çíœ.
 					//    Remove policy_que from the beginning.
 					for(int i=0;i<eval_cnt;++i) policy_que.pop_front();
 					policy_que_cnt -= eval_cnt;
@@ -1440,14 +1440,14 @@ void Tree::ThreadEvaluate(double time_limit, int gpu_idx, bool is_ponder) {
 				// c. Evaluate policy.
 				PolicyNet(sess_policy[gpu_idx], ft_list, prob_list, policy_temp, sym_idx);
 
-				// d. ï¿½mï¿½[ï¿½hï¿½ÌŠmï¿½ï¿½ï¿½ï¿½ï¿½zï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½. Update probability of nodes.
+				// d. ƒm[ƒh‚ÌŠm—¦•ª•z‚ğXV‚·‚é. Update probability of nodes.
 				for(int i=0;i<eval_cnt;++i){
 					UpdateNodeProb(pque_th[i].node_idx, prob_list[i]);
 				}
 			}
 		}
 
-		// 3. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½oï¿½ß‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Astop_thinkï¿½tï¿½ï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½]ï¿½ï¿½ï¿½Iï¿½ï¿½
+		// 3. §ŒÀŠÔ‚ªŒo‰ß‚µ‚½‚©Astop_thinkƒtƒ‰ƒO‚ª—§‚Á‚½‚Æ‚«•]‰¿I—¹
 		//    Terminate evaluation when the time limit has elapsed or stop_think flag is set.
 		auto t2 = std::chrono::system_clock::now();
 		auto elapsed_time = (double)std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()/1000;
@@ -1461,7 +1461,7 @@ void Tree::ThreadEvaluate(double time_limit, int gpu_idx, bool is_ponder) {
 }
 
 /**
- *  thread_cntï¿½Â‚ÌƒXï¿½ï¿½ï¿½bï¿½hï¿½Å•ï¿½ï¿½ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½
+ *  thread_cntŒÂ‚ÌƒXƒŒƒbƒh‚Å•À—ñ’Tõ‚ğs‚¤
  *  Search in parallel with thread_cnt threads.
  */
 void Tree::ParallelSearch(double time_limit, Board& b, bool is_ponder){
@@ -1486,7 +1486,7 @@ void Tree::ParallelSearch(double time_limit, Board& b, bool is_ponder){
 
 
 /**
- *  1000ï¿½ï¿½vï¿½ï¿½ï¿½Cï¿½Aï¿½Eï¿½gï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Aï¿½ÅIï¿½ï¿½ï¿½Ê‚ï¿½ï¿½oï¿½Í‚ï¿½ï¿½ï¿½
+ *  1000‰ñƒvƒŒƒCƒAƒEƒg‚ğs‚¢AÅIŒ‹‰Ê‚ğo—Í‚·‚é
  *  Roll out 1000 times and output the final result.
  */
 void Tree::PrintResult(Board& b){

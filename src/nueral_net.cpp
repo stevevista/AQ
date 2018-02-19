@@ -14,12 +14,12 @@ int cfg_sym_idx = 0;
 #endif
 
 /**
- *  ç€æ‰‹ç¢ºç‡ã‚’äºˆæ¸¬ã™ã‚‹ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯
+ *  ’…èŠm—¦‚ğ—\‘ª‚·‚éƒlƒbƒgƒ[ƒN
  *  Calculate probability distribution with the Policy Network.
  */
- void PolicyNet(Session* sess, std::vector<FeedTensor>& ft_list,
-	std::vector<std::array<double,EBVCNT>>& prob_list,
-	double temp, int sym_idx)
+void PolicyNet(Session* sess, std::vector<FeedTensor>& ft_list,
+		std::vector<std::array<double,EBVCNT>>& prob_list,
+		double temp, int sym_idx)
 {
 
 	prob_list.clear();
@@ -71,7 +71,7 @@ int cfg_sym_idx = 0;
 			else if(sym_idx > 7) prob[v] = (double)policy(i, sv.rv[sym_idxs[i]][j][1]);
 			else prob[v] = (double)policy(i, sv.rv[sym_idx][j][1]);
 
-			// 3ç·šã‚ˆã‚Šä¸­å¤®å´ã®ã‚·ãƒãƒ§ã‚¦ã‚’é€ƒã’ã‚‹æ‰‹ã®ç¢ºç‡ã‚’ä¸‹ã’ã‚‹
+			// 3ü‚æ‚è’†‰›‘¤‚ÌƒVƒ`ƒ‡ƒE‚ğ“¦‚°‚éè‚ÌŠm—¦‚ğ‰º‚°‚é
 			// Reduce probability of moves escaping from Ladder.
 			if(ft_list[i].feature[j][LADDERESC] != 0 && DistEdge(v) > 2) prob[v] *= 0.001;
 		}
@@ -82,11 +82,11 @@ int cfg_sym_idx = 0;
 
 
 /**
- *  å±€é¢è©•ä¾¡å€¤ã‚’äºˆæ¸¬ã™ã‚‹ãƒãƒƒãƒˆãƒ¯ãƒ¼ã‚¯
+ *  ‹Ç–Ê•]‰¿’l‚ğ—\‘ª‚·‚éƒlƒbƒgƒ[ƒN
  *  Calculate value of the board with the Value Network.
  */
- void ValueNet(Session* sess, std::vector<FeedTensor>& ft_list,
-	std::vector<float>& eval_list, int sym_idx)
+void ValueNet(Session* sess, std::vector<FeedTensor>& ft_list,
+		std::vector<float>& eval_list, int sym_idx)
 {
 
 	eval_list.clear();
@@ -115,13 +115,13 @@ int cfg_sym_idx = 0;
 		}
 	}
 
-	#ifdef USE_52FEATURE
-		inputs = {{"x", x},};
-		sess->Run(inputs,{"vfc/value"},{}, &outputs);
-	#else
-		inputs = {{"vn_x", x},{"vn_c", vn_c}};
-		sess->Run(inputs,{"fc2/yfc"},{}, &outputs);
-	#endif // USE_52FEATURE
+#ifdef USE_52FEATURE
+	inputs = {{"x", x},};
+	sess->Run(inputs,{"vfc/value"},{}, &outputs);
+#else
+	inputs = {{"vn_x", x},{"vn_c", vn_c}};
+	sess->Run(inputs,{"fc2/yfc"},{}, &outputs);
+#endif // USE_52FEATURE
 
 	auto value = outputs[0].matrix<float>();
 	for(int i=0;i<ft_cnt;++i){

@@ -1,7 +1,6 @@
 
 cmake_minimum_required(VERSION 2.8.12)
 project(cudnn_test)
-include(../use_cpp_11.cmake)
 
 find_package(CUDA 7.5 REQUIRED)
 set(CUDA_HOST_COMPILATION_CPP ON)
@@ -13,5 +12,5 @@ include(find_cudnn.txt)
 if (cudnn_include AND cudnn)
    include_directories(${cudnn_include})
    cuda_add_library(cudnn_test STATIC ../../dnn/cudnn_dlibapi.cpp ${cudnn} )
-   enable_cpp11_for_target(cudnn_test)
+   target_compile_options(cudnn_test PUBLIC "-std=c++11")
 endif()
